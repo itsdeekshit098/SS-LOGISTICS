@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dropdown with Chevron</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 50px;
+    }
+
+    .dropdown {
+      position: relative;
+      width: 200px;
+    }
+
+    .dropdown-button {
+      width: 100%;
+      padding: 10px 36px 10px 12px;
+      font-size: 16px;
+      color: rgb(181, 181, 181);
+      background-color: white;
+      border: 1px solid rgb(207, 207, 207);
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: left;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+
+    .dropdown-button:hover {
+      border-color: rgb(135, 135, 135);
+    }
+
+    .dropdown-button.active {
+      color: rgb(181,181,181);
+      outline: 2px solid rgb(181, 224, 225);
+      outline-offset: -1px;
+    }
+
+    .dropdown-arrow {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%) rotate(180deg);
+      transition: transform 0.3s ease;
+      width: 20px;
+      height: 20px;
+      pointer-events: none;
+    }
+
+    .dropdown-button.active .dropdown-arrow {
+      transform: translateY(-50%) rotate(0deg);
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 105%;
+      left: 0;
+      width: 100%;
+      background-color: white;
+      border: 1px solid rgb(207, 207, 207);
+      border-radius: 4px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      padding: 10px 16px;
+      display: block;
+      text-decoration: none;
+      color: rgb(90, 90, 90);
+      cursor: pointer;
+    }
+
+    /* Only the placeholder option has this gray color */
+    .dropdown-content a.placeholder {
+      color: rgb(181, 181, 181);
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="dropdown">
+  <button onclick="toggleDropdown()" id="dropdownButton" class="dropdown-button">
+    <span id="dropdownLabel">Select an option</span>
+    <svg class="dropdown-arrow" aria-label="chevron-up" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+      <path fill="rgb(95, 95, 95)" d="M10.517 7H9.483l-5.1 6.072-.766-.644 5.1-6.071A1 1 0 0 1 9.483 6h1.034a1 1 0 0 1 .766.357l5.1 6.071-.766.644L10.517 7z"></path>
+    </svg>
+  </button>
+  <div id="dropdownMenu" class="dropdown-content">
+    <a href="#" class="placeholder" onclick="resetSelection(event)">Select an option</a>
+    <a href="#" onclick="selectOption('Option 1')">Option 1</a>
+    <a href="#" onclick="selectOption('Option 2')">Option 2</a>
+    <a href="#" onclick="selectOption('Option 3')">Option 3</a>
+  </div>
+</div>
+
+<script>
+  const button = document.getElementById("dropdownButton");
+  const menu = document.getElementById("dropdownMenu");
+  const label = document.getElementById("dropdownLabel");
+
+  function toggleDropdown() {
+    menu.classList.toggle("show");
+    button.classList.toggle("active");
+  }
+
+  function selectOption(option) {
+    label.textContent = option;
+    label.style.color = "rgb(90, 90, 90)"; 
+    menu.classList.remove("show");
+    button.classList.remove("active");
+  }
+
+  function resetSelection(event) {
+    event.preventDefault(); // prevent # jump
+    label.textContent = "Select an option";
+    label.style.color = "rgb(181, 181, 181)";
+    menu.classList.remove("show");
+    button.classList.remove("active");
+  }
+
+  // Close dropdown if click outside
+  window.addEventListener("click", function(event) {
+    if (!event.target.closest(".dropdown")) {
+      menu.classList.remove("show");
+      button.classList.remove("active");
+    }
+  });
+</script>
+
+</body>
+</html>
