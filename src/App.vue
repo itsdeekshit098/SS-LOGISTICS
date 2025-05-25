@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="horizontal">
     <span>Selected: </span>
     <Dropdown 
@@ -7,34 +7,42 @@
     />
     <ContractsDropdown
       v-model="selectedOption"
-      :options="dynamicOptions"
+      :options="busesList"
       placeholder="Choose a contract"
       @opened="loadBusOptions"
     />
     <p>You selected: <strong>{{ selectedOption }}</strong></p>
+
+    <Input
+      v-model="form.startingkm"
+      placeholder="Starting KM"
+    />
+    <p>Value: {{ form.startingkm }}</p>
   </div> 
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import ContractsDropdown from './components/ContractsDropdown.vue'
+import Input from './components/Input.vue'
 
 const selectedOption = ref<string | null>(null)
-const dynamicOptions = ref<string[]>([])
+const busesList = ref<string[]>([])
 const selectedBus = ref<string | null>(null)
-const busOptions = ref<string[]>([]) // not populated here, just a placeholder
+const busOptions = ref<string[]>([])
+const form = ref({
+  startingkm: ''
+})
 
 async function loadBusOptions() {
-  if (dynamicOptions.value.length > 0) return // Skip if already loaded
+  if (busesList.value.length > 0) return
   try {
     const response = await fetch('http://localhost:8080/v1/buses')
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
     const data = await response.json()
-console.log('Fetched data:', data)
-
-    dynamicOptions.value = data.map((bus: { id: number; busNo: string }) => bus.busNo)
+    busesList.value = data.map((bus: { id: number; busNo: string }) => bus.busNo)
   } catch (error) {
     console.error('Failed to fetch buses:', error)
   }
@@ -46,5 +54,263 @@ console.log('Fetched data:', data)
   display: flex;
   align-items: center;
   gap: 12px; /* spacing between label and dropdown */
+}
+</style> -->
+
+
+<!-- <template>
+  <form class="horizontal" @submit.prevent="submitForm">
+
+    ContractsDropdown with loaded bus options
+    <ContractsDropdown
+      v-model="form.busNo"
+      :options="busesList"
+      placeholder="Choose a contract"
+      @opened="loadBusOptions"
+    />
+
+    Starting KM Input
+    <Input
+      v-model="form.startingKm"
+      placeholder="Starting KM"
+      data-test="starting-km-input"
+    />
+
+    Starting KM Input
+    <Input
+      v-model="form.endingKm"
+      placeholder="Ending KM"
+      data-test="ending-km-input"
+    />
+
+    <button type="submit">Submit</button>
+
+    <p>You selected: <strong>{{ form.busNo}}</strong></p>
+    <p>Value: {{ form.startingKm }}</p>
+    <p>Value: {{ form.endingKm}}</p>
+  </form>
+</template>
+
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import ContractsDropdown from './components/ContractsDropdown.vue'
+  import Input from './components/Input.vue'
+
+  const busesList = ref<string[]>([])
+  const form = ref({
+    busNo: '',
+    startingKm: '',
+    endingKm: ''
+  })
+
+  let hasLoaded = false
+
+async function loadBusOptions() {
+  if (hasLoaded) return
+  try {
+    const response = await fetch('http://localhost:8080/v1/buses')
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+    const data = await response.json()
+    busesList.value = data.map((bus: { id: number; busNo: string }) => bus.busNo)
+    hasLoaded = true
+  } catch (error) {
+    console.error('Failed to fetch buses:', error)
+  }
+}
+
+  async function submitForm() {
+  const payload = {
+    busNo: form.value.busNo,
+    startingKm: form.value.startingKm,
+    endingKm: form.value.endingKm
+  }
+
+  try {
+    const response = await fetch('http://localhost:8080/v1/trips', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log('Trip saved:', result)
+    alert('Trip saved successfully!')
+  } catch (error) {
+    console.error('Error submitting form:', error)
+    alert('Failed to save trip')
+  }
+}
+
+
+
+</script>
+
+<style>
+.horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 400px; 
+}
+.horizontal > * {
+  width: 200px; 
+}
+
+button[type="submit"] {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+</style> -->
+
+<template>
+  <form class="horizontal" @submit.prevent="submitForm">
+
+    <!-- ContractsDropdown with loaded bus options -->
+    <ContractsDropdown
+      v-model="form.busNo"
+      :options="busesList"
+      placeholder="Choose a contract"
+      @opened="loadBusOptions"
+      :class="{ 'invalid': isFieldInvalid('busNo') }"
+    />
+
+    <!-- Starting KM Input -->
+    <Input
+      v-model="form.startingKm"
+      placeholder="Starting KM"
+      data-test="starting-km-input"
+      :class="{ 'invalid': isFieldInvalid('startingKm') }"
+    />
+
+    <!-- Ending KM Input -->
+    <Input
+      v-model="form.endingKm"
+      placeholder="Ending KM"
+      data-test="ending-km-input"
+      :class="{ 'invalid': isFieldInvalid('endingKm') }"
+    />
+
+    <button type="submit">Submit</button>
+
+    <p>You selected: <strong>{{ form.busNo}}</strong></p>
+    <p>Value: {{ form.startingKm }}</p>
+    <p>Value: {{ form.endingKm}}</p>
+  </form>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import ContractsDropdown from './components/ContractsDropdown.vue'
+import Input from './components/Input.vue'
+
+const busesList = ref<string[]>([])
+const form = ref({
+  busNo: '',
+  startingKm: '',
+  endingKm: ''
+})
+
+const hasSubmitted = ref(false)
+
+async function loadBusOptions() {
+  if (busesList.value.length > 0) return
+  try {
+    const response = await fetch('http://localhost:8080/v1/buses')
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+    const data = await response.json()
+    busesList.value = data.map((bus: { id: number; busNo: string }) => bus.busNo)
+  } catch (error) {
+    console.error('Failed to fetch buses:', error)
+  }
+}
+
+//if hassSubmitted is true and there is no value in the field, then the field is invalid and should be highlighted with a red outline
+const isFieldInvalid = (field: keyof typeof form.value) => {
+  return hasSubmitted.value && !form.value[field]
+}
+
+async function submitForm() {
+  // Set hasSubmitted to true to trigger validation isFieldInvalid to highlight fields if they are empty
+  hasSubmitted.value = true
+
+  // Check if all required fields are filled if not no api call is made and the fields are highlighted
+  if (!form.value.busNo || !form.value.startingKm || !form.value.endingKm) {
+    // Form invalid - don't submit, just highlight fields
+    return
+  }
+
+  const payload = {
+    busNo: form.value.busNo,
+    startingKm: form.value.startingKm,
+    endingKm: form.value.endingKm
+  }
+
+  try {
+    const response = await fetch('http://localhost:8080/v1/trips', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log('Trip saved:', result)
+    alert('Trip saved successfully!')
+
+  
+    console.log('Form reset after submission',isFieldInvalid('busNo'), isFieldInvalid('startingKm'), isFieldInvalid('endingKm'))
+    // Optionally reset form and submission state:
+    form.value = { busNo: '', startingKm: '', endingKm: '' }
+    hasSubmitted.value = false
+    
+  } catch (error) {
+    console.error('Error submitting form:', error)
+    alert('Failed to save trip')
+  }
+}
+</script>
+
+<style>
+.horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 400px; 
+}
+.horizontal > * {
+  width: 200px; 
+}
+
+button[type="submit"] {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Style for invalid fields: red outline */
+.invalid {
+  outline: 2px solid red !important;
 }
 </style>
