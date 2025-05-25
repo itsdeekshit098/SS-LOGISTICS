@@ -27,19 +27,17 @@
       data-test="ending-km-input"
       :class="{ 'invalid': isFieldInvalid('endingKm') }"
     />
-
-    <button type="submit">Submit</button>
     <AppButton
-  label="Submit"
-  icon="upload"
-  trailingicon="check"
-  appearance="secondary"
-  variant="outlined"
-  width="full-width"
-  :loading="false"
-  :disabled="false"
-  @click="submitForm"
-/>
+      type="submit"
+      label="Submit"
+      icon="upload"
+      trailingicon="check"
+      appearance="secondary"
+      variant="outlined"
+      width="full-width"
+      :loading="false"
+      :disabled="false"
+    />
 
 
     <p>You selected: <strong>{{ form.busNo}}</strong></p>
