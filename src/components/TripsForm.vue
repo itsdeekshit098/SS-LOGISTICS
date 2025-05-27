@@ -99,7 +99,7 @@ async function loadBusOptions() {
 
 //if hassSubmitted is true and there is no value in the field, then the field is invalid and should be highlighted with a red outline
 const isFieldInvalid = (field: keyof typeof form.value) => {
-  return hasSubmitted.value && !form.value[field] &&
+  return hasSubmitted.value && !form.value[field]
 }
 
 async function submitForm() {
