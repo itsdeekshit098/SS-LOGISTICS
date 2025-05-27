@@ -406,6 +406,7 @@ onBeforeUnmount(() => {
 .dropdown {
   position: relative;
   width: 200px;
+  z-index: 100;
 }
 
 .dropdown-button {
@@ -448,6 +449,12 @@ onBeforeUnmount(() => {
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.05);
   z-index: 1;
+
+  pointer-events: auto;
+  max-height: calc(4 * 40px); 
+  overflow-y: auto;
+  touch-action: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .dropdown-content a {
