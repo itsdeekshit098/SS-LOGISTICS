@@ -181,6 +181,7 @@ button[type="submit"]:hover {
 </style> -->
 
 <template>
+  <p>hi for testing</p>
   <div class="formPage">
     <div class="formWrapper">
       <TripsForm class="form" />
