@@ -124,7 +124,7 @@ async function submitForm() {
   console.log('Submitting form with values:', form.value)
   console.log('Form values:', form.value.busNo, form.value.startingKm, form.value.endingKm, form.value.date)
 
-  if (form.value.startingKm > form.value.endingKm) {
+if (Number(form.value.startingKm) > Number(form.value.endingKm))  {
   kmValidationError.value = true
   alert('Starting KM must be less than or equal to Ending KM')
   return
