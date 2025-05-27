@@ -67,6 +67,7 @@ import MyButton from './MyButton.vue'
 import Input from './Input.vue'
 import { useBusesState } from '../stores/useTripsState'
 import MyDate from './MyDate.vue'
+import { API_BASE_URL } from '../apiEndpoint.ts'
 
 const form = ref({
   busNo: '',
@@ -83,7 +84,8 @@ const { busNos, setBuses } = useBusesState()
 async function loadBusOptions() {
   if (busNos.value.length > 0) return
   try {
-    const response = await fetch('http://localhost:8080/v1/buses')
+    const response = await fetch(`${API_BASE_URL}/buses`)
+    console.log('Fetching buses from: 111', `${API_BASE_URL}/buses`)
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
     const data = await response.json()
     setBuses(data)
@@ -116,12 +118,12 @@ async function submitForm() {
   }
 
   try {
-    const response = await fetch('http://localhost:8080/v1/trips', {
+    const response = await fetch(`${API_BASE_URL}/trips`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     })
-
+    console.log('Submitting form to:22222', `${API_BASE_URL}/trips`)
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }

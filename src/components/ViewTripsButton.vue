@@ -21,6 +21,7 @@
 import { ref } from 'vue'
 import MyButton from './MyButton.vue'
 import { useTripsState } from "../stores/useTripsState.ts";
+import { API_BASE_URL } from '../apiEndpoint.ts'
 
 const { setTrips, trips } = useTripsState()
 const loading = ref(false)
@@ -28,7 +29,8 @@ const loading = ref(false)
 async function handleTrips() {
   loading.value = true
   try {
-    const response = await fetch('http://localhost:8080/v1/trips')
+    const response = await fetch(`${API_BASE_URL}/trips`)
+    console.log('Fetching trips from:333', `${API_BASE_URL}/trips`)
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
 
     const data = await response.json()

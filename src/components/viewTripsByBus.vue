@@ -79,6 +79,7 @@ import MyButton from './MyButton.vue'
 import MyDate from './MyDate.vue'
 import { ref , computed} from 'vue'
 import { useBusesState, useTripsByBusState } from '../stores/useTripsState.ts'
+import { API_BASE_URL } from '../apiEndpoint.ts'
 
 const startingDate = ref('')
 const endingDate = ref('')
@@ -101,8 +102,9 @@ async function handleTripsByBus() {
   loading.value = true
   try {
     const response = await fetch(
-  `http://localhost:8080/v1/trips/${encodeURIComponent(busNo.value)}?startDate=${encodeURIComponent(startingDate.value)}&endDate=${encodeURIComponent(endingDate.value)}`
+  `${API_BASE_URL}/trips/${encodeURIComponent(busNo.value)}?startDate=${encodeURIComponent(startingDate.value)}&endDate=${encodeURIComponent(endingDate.value)}`
 )
+  console.log('Fetching trips by bus from:3333', response.url)
 
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
 
@@ -122,7 +124,7 @@ async function handleTripsByBus() {
 async function loadBusOptions() {
   if (busNos.value.length > 0) return
   try {
-    const response = await fetch('http://localhost:8080/v1/buses')
+    const response = await fetch(`${API_BASE_URL}/buses`)
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
     const data = await response.json()
     setBuses(data)
