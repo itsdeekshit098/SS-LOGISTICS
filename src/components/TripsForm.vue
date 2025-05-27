@@ -14,7 +14,7 @@
     />
 
     <!-- Starting KM Input -->
-    <Input
+    <MyInput
       v-model="form.startingKm"
       placeholder="Starting KM"
       type="number"
@@ -23,7 +23,7 @@
     />
 
     <!-- Ending KM Input -->
-    <Input
+    <MyInput
       v-model="form.endingKm"
       placeholder="Ending KM"
       type="number"
@@ -51,11 +51,13 @@
       :loading="false"
       :disabled="false"
     />
-
-
-    <p>You selected: <strong>{{ form.busNo}}</strong></p>
-    <p>Value: {{ form.startingKm }}</p>
-    <p>Value: {{ form.endingKm}}</p>
+    <div style="max-width: 200px;">
+      <p>
+        You selected: <strong>{{ form.busNo}}</strong>
+        Value: {{ form.startingKm }}
+        Value: {{ form.endingKm}}
+      </p>
+    </div>
   </form>
   </div>
 </template>
@@ -64,7 +66,7 @@
 import { ref } from 'vue'
 import MyDropdown from './MyDropdown.vue'
 import MyButton from './MyButton.vue'
-import Input from './Input.vue'
+import MyInput from './MyInput.vue'
 import { useBusesState } from '../stores/useTripsState'
 import MyDate from './MyDate.vue'
 import { API_BASE_URL } from '../apiEndpoint.ts'
@@ -97,7 +99,7 @@ async function loadBusOptions() {
 
 //if hassSubmitted is true and there is no value in the field, then the field is invalid and should be highlighted with a red outline
 const isFieldInvalid = (field: keyof typeof form.value) => {
-  return hasSubmitted.value && !form.value[field]
+  return hasSubmitted.value && !form.value[field] &&
 }
 
 async function submitForm() {
@@ -107,6 +109,12 @@ async function submitForm() {
   // Check if all required fields are filled if not no api call is made and the fields are highlighted
   if (!form.value.busNo || !form.value.startingKm || !form.value.endingKm || !form.value.date) {
     // Form invalid - don't submit, just highlight fields
+    return
+  }
+
+  if(form.value.startingKm > form.value.endingKm) {
+
+    alert('Starting KM must be less than or equal to Ending KM')
     return
   }
 
