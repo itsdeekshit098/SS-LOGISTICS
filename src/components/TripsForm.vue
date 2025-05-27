@@ -19,7 +19,7 @@
       placeholder="Starting KM"
       type="number"
       data-test="starting-km-input"
-      :class="{ 'invalid': isFieldInvalid('startingKm') }"
+      :class="{ 'invalid': isFieldInvalid('startingKm') || kmValidationError }"
     />
 
     <!-- Ending KM Input -->
@@ -28,7 +28,7 @@
       placeholder="Ending KM"
       type="number"
       data-test="ending-km-input"
-      :class="{ 'invalid': isFieldInvalid('endingKm') }"
+      :class="{ 'invalid': isFieldInvalid('endingKm') || kmValidationError }"
     />
 
     <!--Date-->
@@ -62,8 +62,12 @@
   </div>
 </template>
 
+
+
+
+
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch} from 'vue'
 import MyDropdown from './MyDropdown.vue'
 import MyButton from './MyButton.vue'
 import MyInput from './MyInput.vue'
@@ -79,9 +83,15 @@ const form = ref({
 })
 
 const hasSubmitted = ref(false)
+const kmValidationError = ref(false)
 
 const { busNos, setBuses } = useBusesState()
 
+watch([() => form.value.startingKm, () => form.value.endingKm], ([start, end]) => {
+  if (hasSubmitted.value && start !== '' && end !== '') {
+    kmValidationError.value = Number(start) > Number(end)
+  }
+})
 
 async function loadBusOptions() {
   if (busNos.value.length > 0) return
@@ -112,11 +122,14 @@ async function submitForm() {
     return
   }
 
-  if(form.value.startingKm > form.value.endingKm) {
+  if (form.value.startingKm > form.value.endingKm) {
+  kmValidationError.value = true
+  alert('Starting KM must be less than or equal to Ending KM')
+  return
+} else {
+  kmValidationError.value = false
+}
 
-    alert('Starting KM must be less than or equal to Ending KM')
-    return
-  }
 
   const payload = {
     busNo: form.value.busNo,
