@@ -9,7 +9,6 @@
       v-model="form.busNo"
       :options="busNos"
       placeholder="Choose a contract"
-      @opened="loadBusOptions"
       :class="{ 'invalid': isFieldInvalid('busNo') }"
     />
 
@@ -85,7 +84,7 @@ const form = ref({
 const hasSubmitted = ref(false)
 const kmValidationError = ref(false)
 
-const { busNos, setBuses } = useBusesState()
+const { busNos} = useBusesState()
 
 watch([() => form.value.startingKm, () => form.value.endingKm], ([start, end]) => {
   if (hasSubmitted.value && start !== '' && end !== '') {
@@ -93,19 +92,20 @@ watch([() => form.value.startingKm, () => form.value.endingKm], ([start, end]) =
   }
 })
 
-async function loadBusOptions() {
-  if (busNos.value.length > 0) return
-  try {
-    const response = await fetch(`${API_BASE_URL}/buses`)
-    console.log('Fetching buses from: 111', `${API_BASE_URL}/buses`)
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-    const data = await response.json()
-    setBuses(data)
-    console.log(busNos.value.length)
-  } catch (error) {
-    console.error('Failed to fetch buses:', error)
-  }
-}
+// async function loadBusOptions() {
+//   if (busNos.value.length > 0) return
+//   try {
+//     const response = await fetch(`${API_BASE_URL}/buses`)
+//     console.log('Fetching buses from: 111', `${API_BASE_URL}/buses`)
+//     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+//     const data = await response.json()
+//     setBuses(data)
+//     console.log('Buses loaded:', data)
+//     console.log(busNos.value.length)
+//   } catch (error) {
+//     console.error('Failed to fetch buses:', error)
+//   }
+// }
 
 //if hassSubmitted is true and there is no value in the field, then the field is invalid and should be highlighted with a red outline
 const isFieldInvalid = (field: keyof typeof form.value) => {
@@ -121,6 +121,7 @@ async function submitForm() {
     // Form invalid - don't submit, just highlight fields
     return
   }
+  console.log('Submitting form with values:', form.value)
 
   if (form.value.startingKm > form.value.endingKm) {
   kmValidationError.value = true
