@@ -166,7 +166,7 @@ function focusInput() {
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from 'vue'
 
-const props = defineProps({
+defineProps({
   modelValue: {
     type: String,
     default: ''
