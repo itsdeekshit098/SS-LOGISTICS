@@ -122,6 +122,7 @@ async function submitForm() {
     return
   }
   console.log('Submitting form with values:', form.value)
+  console.log('Form values:', form.value.busNo, form.value.startingKm, form.value.endingKm, form.value.date)
 
   if (form.value.startingKm > form.value.endingKm) {
   kmValidationError.value = true
