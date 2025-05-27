@@ -3,10 +3,11 @@
  <div>
   <h1 class="formTitle">Trip Sheet</h1>
   <form class="horizontal" @submit.prevent="submitForm">
-    <!-- ContractsDropdown with loaded bus options -->
-    <ContractsDropdown
+
+    <!-- MyDropdown with loaded bus options -->
+    <MyDropdown
       v-model="form.busNo"
-      :options="busesList"
+      :options="busNos"
       placeholder="Choose a contract"
       @opened="loadBusOptions"
       :class="{ 'invalid': isFieldInvalid('busNo') }"
@@ -16,6 +17,7 @@
     <Input
       v-model="form.startingKm"
       placeholder="Starting KM"
+      type="number"
       data-test="starting-km-input"
       :class="{ 'invalid': isFieldInvalid('startingKm') }"
     />
@@ -24,10 +26,21 @@
     <Input
       v-model="form.endingKm"
       placeholder="Ending KM"
+      type="number"
       data-test="ending-km-input"
       :class="{ 'invalid': isFieldInvalid('endingKm') }"
     />
-    <AppButton
+
+    <!--Date-->
+    <MyDate
+      v-model="form.date"
+      placeholder="Select Date"
+      :class="{ 'invalid': isFieldInvalid('date') }"
+    />
+
+
+    <!-- Submit Button -->
+    <MyButton
       type="submit"
       label="Submit"
       icon="upload"
@@ -49,27 +62,32 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import ContractsDropdown from './ContractsDropdown.vue'
-import AppButton from './AppButton.vue'
+import MyDropdown from './MyDropdown.vue'
+import MyButton from './MyButton.vue'
 import Input from './Input.vue'
+import { useBusesState } from '../stores/useTripsState'
+import MyDate from './MyDate.vue'
 
-
-const busesList = ref<string[]>([])
 const form = ref({
   busNo: '',
   startingKm: '',
-  endingKm: ''
+  endingKm: '',
+  date:''
 })
 
 const hasSubmitted = ref(false)
 
+const { busNos, setBuses } = useBusesState()
+
+
 async function loadBusOptions() {
-  if (busesList.value.length > 0) return
+  if (busNos.value.length > 0) return
   try {
     const response = await fetch('http://localhost:8080/v1/buses')
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
     const data = await response.json()
-    busesList.value = data.map((bus: { id: number; busNo: string }) => bus.busNo)
+    setBuses(data)
+    console.log(busNos.value.length)
   } catch (error) {
     console.error('Failed to fetch buses:', error)
   }
@@ -85,7 +103,7 @@ async function submitForm() {
   hasSubmitted.value = true
 
   // Check if all required fields are filled if not no api call is made and the fields are highlighted
-  if (!form.value.busNo || !form.value.startingKm || !form.value.endingKm) {
+  if (!form.value.busNo || !form.value.startingKm || !form.value.endingKm || !form.value.date) {
     // Form invalid - don't submit, just highlight fields
     return
   }
@@ -93,7 +111,8 @@ async function submitForm() {
   const payload = {
     busNo: form.value.busNo,
     startingKm: form.value.startingKm,
-    endingKm: form.value.endingKm
+    endingKm: form.value.endingKm,
+    date: form.value.date
   }
 
   try {
@@ -114,7 +133,7 @@ async function submitForm() {
   
     console.log('Form reset after submission',isFieldInvalid('busNo'), isFieldInvalid('startingKm'), isFieldInvalid('endingKm'))
     // Optionally reset form and submission state:
-    form.value = { busNo: '', startingKm: '', endingKm: '' }
+    form.value = { busNo: '', startingKm: '', endingKm: '', date:''}
     hasSubmitted.value = false
     
   } catch (error) {

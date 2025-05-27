@@ -182,18 +182,29 @@ button[type="submit"]:hover {
 
 <template>
   <div class="formPage">
-      <div class="formTitle">
-        
-      </div>
     <div class="formWrapper">
-    
       <TripsForm class="form" />
     </div>
   </div>
+
+  <div class="viewTrips">
+    <ViewTripsButton />
+    <TripsTable />
+  </div>
+
+  <ViewTripsByBus  />
+
+  
+
+  
+
 </template>
 
 <script setup lang="ts">
 import TripsForm from './components/TripsForm.vue';
+import TripsTable from './components/TripsTable.vue';
+import ViewTripsButton from './components/ViewTripsButton.vue';
+import ViewTripsByBus from './components/viewTripsByBus.vue';
 </script>
 
 <style scoped>

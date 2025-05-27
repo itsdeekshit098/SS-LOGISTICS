@@ -1,0 +1,85 @@
+  .mds-table--zebra-stripes tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+ 
+    /* Optional scrollable styling */
+    .mds-table--scrollable {
+      overflow: auto;
+    }
+ 
+    .mds-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      border: 1px solid #ccc;
+    }
+ 
+    .mds-table th,
+    .mds-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #ccc;
+    }
+ 
+    .mds-table--vertical-lines-solid th,
+    .mds-table--vertical-lines-solid td {
+      border-right: 1px solid #ccc;
+    }
+ 
+    .mds-table--outer-border-dashed {
+      border: 1px dashed #ccc;
+    }
+ 
+    .mds-table--outer-border-dotted {
+      border: 1px dotted #ccc;
+    }
+ 
+    .mds-table--outer-border-none {
+      border: none;
+    }
+ 
+    .mds-table--outer-border-square-corners {
+      border-radius: 0 !important;
+    }
+ 
+    .mds-table--nowrap td,
+    .mds-table--nowrap th {
+      white-space: nowrap;
+    }
+ 
+    .mds-table__cell--text-center {
+      text-align: center;
+    }
+ 
+    .mds-table__cell--text-right {
+      text-align: right;
+    }
+ 
+    .mds-table__cell--number {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+ 
+    .mds-table__column--sticky {
+      position: sticky;
+      left: 0;
+      background: white;
+      z-index: 1;
+    }
+ 
+    .mds-table--header-sticky thead th {
+      position: sticky;
+      top: 0;
+      background: #f0f0f0;
+      z-index: 2;
+    }
+ 
+    .mds-table--footer-sticky tfoot td {
+      position: sticky;
+      bottom: 0;
+      background: #f0f0f0;
+      z-index: 2;
+    }
+ 
+    .mds-table__row--selected {
+      background-color: #e0f7fa;
+    }
