@@ -29,8 +29,14 @@ export type Bus = {
 }
 
 const buses = ref<Bus[]>([])
-
-const busNos = ref<string[]>([])
+const busNos = ref<string[]>([
+  'KA01AB1234',
+  'TN05CD5678',
+  'MH12EF9876',
+  'AP01AB1234',
+  'BH05CD5678',
+  'PB2EF9876'
+])
 
 export function useBusesState() {
   function setBuses(newBuses: Bus[]) {

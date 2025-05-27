@@ -6,11 +6,11 @@
 </style>
 <template>
   <div class="viewTripsByBusDiv">
+      <!-- @opened="loadBusOptions" add this to MyDropdown if u need to fetch values form an  -->
     <MyDropdown
       v-model="busNo"
       :options="busNos"
       placeholder="Choose the Bus"
-      @opened="loadBusOptions"
     />
 
     <MyDate
@@ -85,7 +85,7 @@ const startingDate = ref('')
 const endingDate = ref('')
 const busNo = ref('')
 const loading = ref(false)
-const { busNos, setBuses } = useBusesState()
+const { busNos} = useBusesState()
 const{ tripsByBus, setTripsByBus}=useTripsByBusState()
 
 const totalDistance = computed(() => {
@@ -121,17 +121,17 @@ async function handleTripsByBus() {
   }
 }
 
-async function loadBusOptions() {
-  if (busNos.value.length > 0) return
-  try {
-    const response = await fetch(`${API_BASE_URL}/buses`)
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-    const data = await response.json()
-    setBuses(data)
-    console.log('Bus list loaded:', busNos.value)
-  } catch (error) {
-    console.error('Failed to fetch buses:', error)
-  }
-}
+// async function loadBusOptions() {
+//   if (busNos.value.length > 0) return
+//   try {
+//     const response = await fetch(`${API_BASE_URL}/buses`)
+//     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+//     const data = await response.json()
+//     setBuses(data)
+//     console.log('Bus list loaded:', busNos.value)
+//   } catch (error) {
+//     console.error('Failed to fetch buses:', error)
+//   }
+// }
 </script>
 
